@@ -47,6 +47,7 @@ const (
 	modeIP
 	modeName
 	modeNameAndIP
+	modeLabel
 )
 
 // New returns a initialized KubePods.
@@ -157,6 +158,14 @@ func (k *KubePods) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Ms
 			}
 			if exists {
 				items = append(items, item)
+			}
+		}
+
+		// get the items with the corresponding namespace/label combo
+		if k.mode == modeLabel {
+			items, err = k.indexer.ByIndex("label", podKey)
+			if err != nil {
+				return dns.RcodeServerFailure, err
 			}
 		}
 	case 1:

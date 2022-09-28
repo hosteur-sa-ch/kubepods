@@ -91,6 +91,8 @@ func parseStanza(c *caddy.Controller) (*KubePods, error) {
 				kps.mode = modeName
 			case "name-and-ip":
 				kps.mode = modeNameAndIP
+			case "label":
+				kps.mode = modeLabel
 			}
 		case "ttl":
 			args := c.RemainingArgs()
@@ -169,6 +171,19 @@ func (k *KubePods) setWatch(ctx context.Context) {
 					idx = append(idx, strings.Join([]string{pod.Namespace, dashIP(addr.IP)}, "/"))
 				}
 				return idx, nil
+			},
+			// index by label name
+			"label": func(obj interface{}) ([]string, error) {
+				pod, ok := obj.(*core.Pod)
+				if !ok {
+					return nil, errors.New("unexpected obj type")
+				}
+				name, ok := pod.GetLabels()["dns"]
+				if !ok {
+					return nil, nil
+				}
+
+				return []string{strings.Join([]string{pod.Namespace, name}, "/")}, nil
 			},
 		},
 	)
