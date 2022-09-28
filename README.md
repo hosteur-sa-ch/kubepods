@@ -34,6 +34,7 @@ kubepods [ZONES...] {
     from Kubernetes DNS-Based Service Discovery.  In this mode PTR records cannot be synthesized. This mode is considered
     insecure because it does not validate the existence of a Pod matching the IP. No connection to the API is required
     in this mode.
+  * `label` uses the `dns` label of the pod. e.g. `dnslabel.default.pod.cluster.local`
 * `ttl` allows you to set a custom TTL for responses. The default is 5 seconds.  The minimum TTL allowed is
   0 seconds, and the maximum is capped at 3600 seconds. Setting TTL to 0 will prevent records from being cached.
   All endpoint queries and headless service queries will result in an NXDOMAIN.
