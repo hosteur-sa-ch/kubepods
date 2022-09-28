@@ -1,4 +1,4 @@
-module github.com/coredns/kubepods
+module github.com/hosteur-sa-ch/kubepods
 
 go 1.17
 
